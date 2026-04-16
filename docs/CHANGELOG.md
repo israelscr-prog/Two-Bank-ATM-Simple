@@ -58,3 +58,28 @@ Todos los cambios relevantes del proyecto documentados en orden cronológico.
   - Python 3.12 en ubuntu-latest
   - `ruff` para calidad de código
   - `pytest` con cobertura de tests
+
+---
+
+## [0.5.0] — 2026-04-16 — SQLite
+
+### Added
+- `infrastructure/sqlite/database.py` — Conexión y schema SQLite
+- `infrastructure/sqlite/sqlite_account_repo.py` — Persistencia de cuentas
+- `infrastructure/sqlite/sqlite_card_repo.py` — Persistencia de tarjetas
+- `infrastructure/sqlite/sqlite_transaction_repo.py` — Persistencia de transacciones
+- `main.py` — Modo dual: `--memory` / SQLite por defecto
+- `data/` añadido a `.gitignore`
+
+---
+
+## [0.6.0] — 2026-04-16 — Tests SQLite
+
+### Added
+- `tests/test_sqlite_repos.py` — 13 tests de integración para SQLite
+  - `TestSQLiteAccountRepo` — save, get, update balance/status
+  - `TestSQLiteCardRepo` — save, get, update pin/blocked, foreign key
+  - `TestSQLiteTransactionRepo` — save, get, limit, orden cronológico
+- Fix `sqlite_card_repo.py` — `ON CONFLICT(number)` en vez de `ON CONFLICT(id)`
+
+---
