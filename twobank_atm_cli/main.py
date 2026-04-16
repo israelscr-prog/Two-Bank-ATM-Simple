@@ -1,5 +1,7 @@
 # main.py — TWO Bank ATM
-# Punto de entrada del programa.
+# Punto de entrada: --cli para terminal, --gui (o sin argumento) para interfaz gráfica.
+
+import sys
 
 from infrastructure.repositories import (
     InMemoryAccountRepo,
@@ -8,28 +10,31 @@ from infrastructure.repositories import (
 )
 from infrastructure.seed import seed
 from application.session import ATMSession
-from presentation.cli import login, menu_principal
 
 
-def main() -> None:
-    # Setup — repositorios y datos de prueba
+def main():
     account_repo = InMemoryAccountRepo()
     card_repo    = InMemoryCardRepo()
     tx_repo      = InMemoryTransactionRepo()
 
     seed(account_repo, card_repo)
-
     session = ATMSession(account_repo, card_repo, tx_repo)
 
-    # Bucle principal del cajero
-    while True:
-        if login(session):
-            menu_principal(session)
+    mode = sys.argv[1] if len(sys.argv) > 1 else "--gui"
 
-        continuar = input("\n¿Nueva sesión? (s/n): ").strip().lower()
-        if continuar != "s":
-            print("\n  👋 Hasta pronto.\n")
-            break
+    if mode == "--cli":
+        from presentation.cli import login, menu_principal
+        while True:
+            if login(session):
+                menu_principal(session)
+            if input("\n¿Nueva sesión? (s/n): ").strip().lower() != "s":
+                print("\n  👋 Hasta pronto.\n")
+                break
+
+    else:
+        from presentation.gui.app import ATMApp
+        app = ATMApp(session)
+        app.mainloop()
 
 
 if __name__ == "__main__":
