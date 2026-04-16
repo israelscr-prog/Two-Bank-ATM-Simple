@@ -7,7 +7,7 @@ import pytest
 from domain.entities import Account, Card, Transaction, hash_pin
 from domain.enums import AccountStatus, TransactionType
 from domain.exceptions import NotFoundError
-from infrastructure.sqlite.database import init_db, get_connection
+from infrastructure.sqlite.database import get_connection
 from infrastructure.sqlite.sqlite_account_repo import SQLiteAccountRepo
 from infrastructure.sqlite.sqlite_card_repo import SQLiteCardRepo
 from infrastructure.sqlite.sqlite_transaction_repo import SQLiteTransactionRepo
@@ -27,7 +27,8 @@ def clean_db(monkeypatch):
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
 
-    get_conn = lambda: conn
+    def get_conn():
+        return conn
     monkeypatch.setattr(db_module, "get_connection", get_conn)
     monkeypatch.setattr("infrastructure.sqlite.sqlite_account_repo.get_connection",    get_conn)
     monkeypatch.setattr("infrastructure.sqlite.sqlite_card_repo.get_connection",       get_conn)
