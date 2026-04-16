@@ -48,3 +48,13 @@ Todos los cambios relevantes del proyecto documentados en orden cronológico.
 - `infrastructure/seed.py` — Datos de prueba: Ana García (1234/1111), Luis Pérez (5678/2222)
 - `requirements.txt` — `pytest`, `pytest-cov`, `ruff`
 - Estructura base de carpetas: `domain/`, `application/`, `infrastructure/`, `presentation/`, `tests/`
+
+---
+
+## [0.4.0] — 2026-04-16 — CI Pipeline
+
+### Added
+- `.github/workflows/ci.yml` — GitHub Actions pipeline
+  - Python 3.12 en ubuntu-latest
+  - `ruff` para calidad de código
+  - `pytest` con cobertura de tests
