@@ -15,7 +15,7 @@ class SQLiteCardRepo:
             conn.execute("""
                 INSERT INTO cards (id, number, pin_hash, account_id, blocked)
                 VALUES (?, ?, ?, ?, ?)
-                ON CONFLICT(id) DO UPDATE SET
+                ON CONFLICT(number) DO UPDATE SET
                     pin_hash = excluded.pin_hash,
                     blocked  = excluded.blocked
             """, (
