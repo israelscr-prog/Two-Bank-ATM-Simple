@@ -131,9 +131,7 @@ class TestWithdraw:
 
     def test_withdraw_records_transaction(self, setup):
         session, account, _ = setup
-        account_repo, _, tx_repo = (
-            session.account_repo, session.card_repo, session.tx_repo
-        )
+        tx_repo = session.tx_repo
         session.authenticate("1234", "1111")
         session.withdraw(100.00)
         txs = tx_repo.get_by_account(account.id)

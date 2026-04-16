@@ -4,8 +4,8 @@
 import uuid
 import pytest
 
-from domain.entities import Account, Card, Transaction, hash_pin
-from domain.enums import AccountStatus, TransactionType
+from domain.entities import Account, Card, hash_pin
+from domain.enums import AccountStatus
 from domain.exceptions import (
     AccountBlockedError,
     AuthenticationError,

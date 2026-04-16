@@ -5,7 +5,7 @@ import uuid
 import pytest
 
 from domain.entities import Account, Card, hash_pin
-from domain.enums import AccountStatus, TransactionType
+from domain.enums import TransactionType
 from domain.entities import Transaction
 from domain.exceptions import NotFoundError
 from infrastructure.repositories import (
@@ -13,7 +13,7 @@ from infrastructure.repositories import (
     InMemoryCardRepo,
     InMemoryTransactionRepo,
 )
-from datetime import datetime, timezone
+
 
 
 # ─────────────────────────────────────────
