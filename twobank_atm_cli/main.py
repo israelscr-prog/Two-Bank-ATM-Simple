@@ -49,8 +49,7 @@ def _seed_sqlite_if_empty(account_repo, card_repo) -> None:
 
     import uuid
     from domain.entities import Account, Card, hash_pin
-    from domain.enums import AccountStatus
-
+  
     acc1_id = uuid.uuid4()
     acc2_id = uuid.uuid4()
 

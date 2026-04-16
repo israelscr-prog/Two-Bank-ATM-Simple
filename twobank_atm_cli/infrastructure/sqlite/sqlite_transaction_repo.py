@@ -2,7 +2,7 @@
 # Repositorio de transacciones con persistencia SQLite.
 
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime 
 
 from domain.entities import Transaction
 from domain.enums import TransactionType
