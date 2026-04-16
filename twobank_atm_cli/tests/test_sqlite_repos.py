@@ -1,21 +1,24 @@
 # tests/test_sqlite_repos.py — TWO Bank ATM
 # Tests de integración para los repositorios SQLite.
 
+
 import uuid
 import pytest
+
 
 from domain.entities import Account, Card, Transaction, hash_pin
 from domain.enums import AccountStatus, TransactionType
 from domain.exceptions import NotFoundError
-from infrastructure.sqlite.database import get_connection
 from infrastructure.sqlite.sqlite_account_repo import SQLiteAccountRepo
 from infrastructure.sqlite.sqlite_card_repo import SQLiteCardRepo
 from infrastructure.sqlite.sqlite_transaction_repo import SQLiteTransactionRepo
 
 
+
 # ─────────────────────────────────────────
 # Setup — DB en memoria para tests
 # ─────────────────────────────────────────
+
 
 @pytest.fixture(autouse=True)
 def clean_db(monkeypatch):
@@ -23,9 +26,11 @@ def clean_db(monkeypatch):
     import sqlite3
     import infrastructure.sqlite.database as db_module
 
+
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
+
 
     def get_conn():
         return conn
@@ -33,6 +38,7 @@ def clean_db(monkeypatch):
     monkeypatch.setattr("infrastructure.sqlite.sqlite_account_repo.get_connection",    get_conn)
     monkeypatch.setattr("infrastructure.sqlite.sqlite_card_repo.get_connection",       get_conn)
     monkeypatch.setattr("infrastructure.sqlite.sqlite_transaction_repo.get_connection", get_conn)
+
 
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS accounts (
@@ -64,9 +70,11 @@ def clean_db(monkeypatch):
     conn.close()
 
 
+
 # ─────────────────────────────────────────
 # Fixtures
 # ─────────────────────────────────────────
+
 
 @pytest.fixture
 def account():
@@ -77,6 +85,7 @@ def account():
         currency="EUR",
     )
 
+
 @pytest.fixture
 def card(account):
     return Card(
@@ -86,24 +95,30 @@ def card(account):
         account_id=account.id,
     )
 
+
 @pytest.fixture
 def account_repo():
     return SQLiteAccountRepo()
 
+
 @pytest.fixture
 def card_repo():
     return SQLiteCardRepo()
+
 
 @pytest.fixture
 def tx_repo():
     return SQLiteTransactionRepo()
 
 
+
 # ─────────────────────────────────────────
 # SQLiteAccountRepo tests
 # ─────────────────────────────────────────
 
+
 class TestSQLiteAccountRepo:
+
 
     def test_save_and_get_by_id(self, account_repo, account):
         account_repo.save(account)
@@ -112,9 +127,11 @@ class TestSQLiteAccountRepo:
         assert result.balance == account.balance
         assert result.currency == account.currency
 
+
     def test_get_by_id_not_found(self, account_repo):
         with pytest.raises(NotFoundError):
             account_repo.get_by_id(uuid.uuid4())
+
 
     def test_save_updates_balance(self, account_repo, account):
         account_repo.save(account)
@@ -122,6 +139,7 @@ class TestSQLiteAccountRepo:
         account_repo.save(account)
         result = account_repo.get_by_id(account.id)
         assert result.balance == 9999.00
+
 
     def test_save_updates_status(self, account_repo, account):
         account_repo.save(account)
@@ -131,11 +149,14 @@ class TestSQLiteAccountRepo:
         assert result.status == AccountStatus.BLOCKED
 
 
+
 # ─────────────────────────────────────────
 # SQLiteCardRepo tests
 # ─────────────────────────────────────────
 
+
 class TestSQLiteCardRepo:
+
 
     def test_save_and_get_by_number(self, account_repo, card_repo, account, card):
         account_repo.save(account)
@@ -144,9 +165,11 @@ class TestSQLiteCardRepo:
         assert result.number   == card.number
         assert result.pin_hash == card.pin_hash
 
+
     def test_get_by_number_not_found(self, card_repo):
         with pytest.raises(NotFoundError):
             card_repo.get_by_number("9999")
+
 
     def test_save_updates_pin(self, account_repo, card_repo, account, card):
         account_repo.save(account)
@@ -156,6 +179,7 @@ class TestSQLiteCardRepo:
         result = card_repo.get_by_number("1234")
         assert result.check_pin("9999") is True
 
+
     def test_save_updates_blocked(self, account_repo, card_repo, account, card):
         account_repo.save(account)
         card_repo.save(card)
@@ -164,17 +188,21 @@ class TestSQLiteCardRepo:
         result = card_repo.get_by_number("1234")
         assert result.blocked is True
 
+
     def test_foreign_key_fails_without_account(self, card_repo, card):
         import sqlite3
         with pytest.raises(sqlite3.IntegrityError):
             card_repo.save(card)
 
 
+
 # ─────────────────────────────────────────
 # SQLiteTransactionRepo tests
 # ─────────────────────────────────────────
 
+
 class TestSQLiteTransactionRepo:
+
 
     def test_save_and_get_by_account(self, account_repo, tx_repo, account):
         account_repo.save(account)
@@ -190,9 +218,11 @@ class TestSQLiteTransactionRepo:
         assert len(results) == 1
         assert results[0].amount == 200.00
 
+
     def test_get_by_account_empty(self, tx_repo):
         results = tx_repo.get_by_account(uuid.uuid4())
         assert results == []
+
 
     def test_get_by_account_limit(self, account_repo, tx_repo, account):
         account_repo.save(account)
@@ -206,6 +236,7 @@ class TestSQLiteTransactionRepo:
             ))
         results = tx_repo.get_by_account(account.id, limit=5)
         assert len(results) == 5
+
 
     def test_get_by_account_most_recent_first(self, account_repo, tx_repo, account):
         account_repo.save(account)
