@@ -1,0 +1,17 @@
+# TWO Bank ATM — CLI Simple
+# Python 3.10+
+
+# Testing
+pytest==8.3.5
+pytest-cov==6.1.0
+Flake8==6.0.0
+mypy==0.971
+pytest-mock>=3.14
+
+# Code quality (opcional pero recomendado)
+ruff==0.11.5
+
+bcrypt>=4.1
+python-dotenv>=1.0
+requests>=2.31
+black>=24.0
