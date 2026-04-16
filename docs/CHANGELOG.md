@@ -83,3 +83,41 @@ Todos los cambios relevantes del proyecto documentados en orden cronológico.
 - Fix `sqlite_card_repo.py` — `ON CONFLICT(number)` en vez de `ON CONFLICT(id)`
 
 ---
+
+# CHANGELOG — Two-Bank-ATM-Simple
+
+## [Unreleased 0.7.0] — 2026-04-17
+
+### Added
+- `tests/test_gui.py` — 13 tests unitarios de GUI sin display real
+  - `TestLoginFrame`: authenticate, on_success, error, intentos, bloqueo tras 3 fallos, reset
+  - `TestMenuFrame`: balance, withdraw, deposit, mini statement, logout, refresh
+  - Fakes de CustomTkinter (`FakeCTkFrame`, `FakeCTkEntry`, `FakeCTkTextbox`, etc.)
+    para evitar dependencia de Tcl/Tk en entornos sin display
+
+- `tests/test_domain.py` — 28 tests unitarios de entidades y sesión
+  - `TestAccountDeposit`: importe válido, cero, negativo, cuenta bloqueada
+  - `TestAccountWithdraw`: retirada válida, cero, negativo, saldo insuficiente, exacto, bloqueada
+  - `TestCard`: check_pin correcto/incorrecto, change_pin éxito/pin_incorrecto/formato_inválido/corto
+  - `TestATMSessionAuthenticate`: éxito, pin incorrecto, tarjeta bloqueada, cuenta bloqueada
+  - `TestATMSessionOperations`: balance, withdraw, deposit, logout, mini_statement vacío
+  - `TestATMSessionWithoutLogin`: SessionError en todas las operaciones sin sesión activa
+
+- `tests/test_repositories.py` — 14 tests unitarios de repositorios en memoria
+  - `TestInMemoryAccountRepo`: save, get_by_id, overwrite, not_found, múltiples cuentas
+  - `TestInMemoryCardRepo`: save, get_by_number, overwrite, not_found, múltiples tarjetas
+  - `TestInMemoryTransactionRepo`: save, filtrado por cuenta, límite, orden reciente primero,
+    lista vacía, múltiples transacciones
+
+### Fixed
+- Error `ModuleNotFoundError: No module named 'customtkinter'` — instalado en el venv correcto
+  (`twobank_atm_cli\.venv`) en lugar del venv raíz
+- Error `_tkinter.TclError: Can't find a usable tk.tcl` — resuelto sustituyendo widgets reales
+  de CTk por clases Fake antes del import de los frames
+- Error `unittest.mock.InvalidSpecError: Cannot spec a Mock object` — resuelto usando
+  instancias `MagicMock()` en lugar de la clase `MagicMock` en los patches
+
+### Tests
+- **Total: 55 tests — 55 passed, 0 failed**
+
+---
