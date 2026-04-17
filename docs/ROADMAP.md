@@ -1,5 +1,7 @@
 # ROADMAP — TWO Bank ATM Simple
 
+> 🌐 [Read in English](./ROADMAP.EN.md)
+
 Funcionalidades planificadas ordenadas por prioridad.
 
 ---

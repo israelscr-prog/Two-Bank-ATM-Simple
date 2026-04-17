@@ -1,5 +1,7 @@
 # CHANGELOG — TWO Bank ATM Simple
 
+> 🌐 [Read in English](./CHANGELOG.EN.md)
+
 Todos los cambios relevantes del proyecto documentados en orden cronológico.
 
 ---
