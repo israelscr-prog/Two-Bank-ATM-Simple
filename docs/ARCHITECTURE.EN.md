@@ -1,12 +1,12 @@
 # Architecture — Two-Bank-ATM
 
-> 🌐 [Leer en Español](./ARCHITECTURE.ES.md)
+> 🌐 [Leer en Español](./ARCHITECTURE..ES.md)
 
-This document describes the project architecture, the responsibility of each layer, folder and file.
+### This document describes the project architecture, the responsibility of each layer, folder and file.
 
 ---
 
-## Overview
+# Overview
 
 The project follows a **clean layered architecture** inspired by Robert C. Martin's _Clean Architecture_. Each layer only depends on inner layers, never the other way around. The business logic (domain) has no knowledge of the database or the user interface.
 
@@ -18,17 +18,17 @@ The project follows a **clean layered architecture** inspired by Robert C. Marti
 └────────────────┬────────────────┘
                  │ usa
 ┌────────────────▼────────────────┐
-│          application/           │  ← Casos de uso
+│          application/           │  ← Use Cases
 │          session.py             │
 └────────────────┬────────────────┘
                  │ usa
 ┌────────────────▼────────────────┐
-│            domain/              │  ← Núcleo — sin dependencias externas
+│            domain/              │  ← Core - without dependencies
 │  entities  enums  exceptions    │
 └────────────────┬────────────────┘
                  │ implementado por
 ┌────────────────▼────────────────┐
-│        infrastructure/          │  ← Adaptadores de datos
+│        infrastructure/          │  ← Data Adapters 
 │  repositories  sqlite/  seed    │
 └─────────────────────────────────┘
 ```
@@ -36,6 +36,45 @@ The project follows a **clean layered architecture** inspired by Robert C. Marti
 
 
 **Key rule:** `domain/` does not import anything from `infrastructure/`, `application/` or `presentation/`.
+
+---
+
+## Repository root
+
+```
+Two-Bank-ATM-Simple/
+├── .github/workflows/ci.yml     # CI Pipeline CI in GitHub Actions
+├── docs/
+│   ├── CHANGELOG.md             # Change history
+│   └── ROADMAP.md               # Planned Funcionaliies
+├── twobank_atm_cli/             # Main application package
+├── README.md                    # General Description of proyect
+├── ARCHITECTURE.md              # This Archive
+├── LICENSE
+└── .gitignore
+```
+--- 
+
+### `.github/workflows/ci.yml`
+Pipeline de integración continua que se ejecuta en cada push o pull request. Pasos: instalar dependencias → lint con ruff → ejecutar pytest. Falla el build si hay errores de lint o tests.
+
+---
+
+## `twobank_atm_cli/`
+
+Application root package. Contains the source code, tests, database, and dependencies..
+
+### `main.py`
+Application entry point. Initializes the SQLite database, loads the seed data (`seed.py`) and launches the graphical interface (`ATMApp`).
+
+### `requirements.txt`
+List of project dependencies:
+- `customtkinter` — modern widgets on top of Tkinter
+- `pytest`, `pytest-mock`, `pytest-cov` — testing
+
+### `data/twobank.db`
+SQLite file containing the tables `accounts`, `cards`, and `transactions`. It is automatically created when `main.py` is executed if it does not exist.
+
 
 ---
 
